@@ -21,7 +21,7 @@ def get_subject_from_first_page(plRead):
     return text.splitlines()[0].strip()
 
 
-for fileName in os.listdir('.'):
+for fileName in os.listdir('..'):
     if fileName.endswith('.pdf'):
         shortName = fileName[0:-4]
         if len(shortName) > 10:

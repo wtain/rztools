@@ -1,7 +1,7 @@
 import os
 from typing import Callable
 
-from tracktime import TrackTime
+from FindDuplicateFiles.tracktime import TrackTime
 
 
 class FileSystemScanner:
