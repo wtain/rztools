@@ -1,7 +1,7 @@
 import os
 from typing import Callable
 
-from FindDuplicateFiles.tracktime import TrackTime
+from Common.tracktime import TrackTime
 
 
 class FileSystemScanner:
@@ -13,5 +13,5 @@ class FileSystemScanner:
     def scan(self, fileVisitor: Callable[[str], None]):
         for root, dirs, files in os.walk(self.dir):
             for file in files:
-                fullFileName = root + os.sep + file
+                fullFileName = os.path.join(root, file)
                 fileVisitor(fullFileName)
