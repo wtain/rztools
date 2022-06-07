@@ -24,7 +24,7 @@ class FileRegistry:
         entriesToRemoveCount = 0
         sizeToSaveTotal = 0
         fileSizesMismatches = 0
-        ts = datetime.datetime.now().timestamp()
+        ts = datetime.datetime.utcnow()
         for fileHash, fileNames in self.registry.items():
             count = len(fileNames)
             fileSizes = list(map(os.path.getsize, fileNames))

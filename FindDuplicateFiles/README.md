@@ -61,3 +61,8 @@ Find all files by hash
 ```
 db.files.find({ hash: "8cddf9ddc5ce4fd09dbc4ba4f0f8c262bec4a7e65782f4b35605906e3e87f2de"})
 ```
+
+Delete all
+```
+db.files.remove({})
+```
