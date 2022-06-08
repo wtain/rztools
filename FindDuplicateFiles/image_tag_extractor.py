@@ -32,6 +32,7 @@ class ImageTagExtractor:
                 data = str(data)
                 result[tag] = data
             return result
-        except OSError as e:
+        except (OSError, UnicodeDecodeError) as e:
             print("*** ImageTagExtractor: *** ERROR: " + str(e.strerror))
             return {}
+
