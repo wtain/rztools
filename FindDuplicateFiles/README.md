@@ -12,6 +12,7 @@ This is useful to find duplicate files and decide which to remove in order to sa
 
 ```bash
 pip install pymongo
+pip install Pillow
 ```
 
 ### Install Docker

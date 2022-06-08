@@ -1,15 +1,18 @@
 import os
 import datetime
+from typing import Dict
 
 from FindDuplicateFiles.file_repository import FileRepository
+from FindDuplicateFiles.image_tag_extractor import ImageTagExtractor
 
 
 class FileRegistry:
 
-    def __init__(self, hashCalculator, fileRepository: FileRepository):
+    def __init__(self, hashCalculator, fileRepository: FileRepository, imageTagExtractor: ImageTagExtractor):
         self.registry = {}
         self.hashCalculator = hashCalculator
         self.fileRepository = fileRepository
+        self.imageTagExtractor = imageTagExtractor
 
     def visitFile(self, fullFileName: str):
         fileHash = self.hashCalculator.calculateHash(fullFileName)
@@ -40,17 +43,21 @@ class FileRegistry:
                 for fileName in fileNames:
                     print(fileName)
             for fileName, fileSize in zip(fileNames, fileSizes):
-                self.fileRepository.store_file(self.build_file_entry(fileHash, fileName, fileSize, ts))
+                self.fileRepository.store_file(
+                    self.build_file_entry(fileHash, fileName,
+                                          fileSize,
+                                          ts, self.imageTagExtractor.extractTags(fileName)))
         print('Duplicate classes count: ', duplicateClassesCount)
         print('Entries to remove count: ', entriesToRemoveCount)
         print('Total size to save: ', sizeToSaveTotal)
         print('File sizes mismatches (possible hash collisions): ', fileSizesMismatches)
 
     @staticmethod
-    def build_file_entry(fileHash: str, fileName: str, fileSize: int, timestamp):
+    def build_file_entry(fileHash: str, fileName: str, fileSize: int, timestamp, tags: Dict[str, str]):
         return {
             "hash": fileHash,
             "size": fileSize,
             "path": fileName,
-            "lastUpdated": timestamp
+            "lastUpdated": timestamp,
+            "tags": tags
         }
