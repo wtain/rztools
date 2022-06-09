@@ -21,13 +21,17 @@ class FileRegistry:
             fileList.append(fullFileName)
         else:
             self.registry[fileHash] = [fullFileName]
+        ts = datetime.datetime.utcnow()
+        self.fileRepository.store_file(
+            self.build_file_entry(fileHash, fullFileName,
+                                  os.path.getsize(fullFileName),
+                                  ts, self.imageTagExtractor.extractTags(fullFileName)))
 
     def printStatistics(self):
         duplicateClassesCount = 0
         entriesToRemoveCount = 0
         sizeToSaveTotal = 0
         fileSizesMismatches = 0
-        ts = datetime.datetime.utcnow()
         for fileHash, fileNames in self.registry.items():
             count = len(fileNames)
             fileSizes = list(map(os.path.getsize, fileNames))
@@ -42,11 +46,6 @@ class FileRegistry:
                 print(fileHash, ' ', count)
                 for fileName in fileNames:
                     print(fileName)
-            for fileName, fileSize in zip(fileNames, fileSizes):
-                self.fileRepository.store_file(
-                    self.build_file_entry(fileHash, fileName,
-                                          fileSize,
-                                          ts, self.imageTagExtractor.extractTags(fileName)))
         print('Duplicate classes count: ', duplicateClassesCount)
         print('Entries to remove count: ', entriesToRemoveCount)
         print('Total size to save: ', sizeToSaveTotal)

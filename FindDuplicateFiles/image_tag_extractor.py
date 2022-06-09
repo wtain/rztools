@@ -1,5 +1,4 @@
 import os
-import sys
 from typing import Dict
 
 from PIL import Image
@@ -32,7 +31,9 @@ class ImageTagExtractor:
                 data = str(data)
                 result[tag] = data
             return result
-        except (OSError, UnicodeDecodeError) as e:
+        except OSError as e:
             print("*** ImageTagExtractor: *** ERROR: " + str(e.strerror))
             return {}
-
+        except UnicodeDecodeError as e:
+            print("*** ImageTagExtractor: *** ERROR: " + str(e.reason))
+            return {}
