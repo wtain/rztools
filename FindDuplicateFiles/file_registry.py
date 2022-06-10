@@ -58,5 +58,5 @@ class FileRegistry:
             "size": fileSize,
             "path": fileName,
             "lastUpdated": timestamp,
-            "tags": tags
+            "tags": list(map(lambda it: {"name": it[0], "value": it[1]}, tags.items()))
         }
