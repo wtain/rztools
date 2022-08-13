@@ -12,3 +12,16 @@ pip3 install PyPDF2
 
 ```bash
 ```
+
+
+## Build Docker image
+
+```bash
+docker build --tag python-docker .
+```
+
+## Run
+
+```bash
+docker run -d -p 5000:5000 --net image_network python-docker
+```

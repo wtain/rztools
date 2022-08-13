@@ -42,10 +42,6 @@ class FileRegistry:
             if count > 1:
                 duplicateClassesCount += 1
                 entriesToRemoveCount += count - 1
-                print('-------------------------------------------------')
-                print(fileHash, ' ', count)
-                for fileName in fileNames:
-                    print(fileName)
         print('Duplicate classes count: ', duplicateClassesCount)
         print('Entries to remove count: ', entriesToRemoveCount)
         print('Total size to save: ', sizeToSaveTotal)
@@ -58,5 +54,8 @@ class FileRegistry:
             "size": fileSize,
             "path": fileName,
             "lastUpdated": timestamp,
-            "tags": list(map(lambda it: {"name": it[0], "value": it[1]}, tags.items()))
+            "tags": list(map(lambda it: {
+                "name": it[0],
+                "value": it[1]
+            }, tags.items()))
         }

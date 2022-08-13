@@ -1,3 +1,4 @@
+
 from pymongo import MongoClient
 
 
@@ -12,3 +13,17 @@ class FileRepository:
         self.files.find_one_and_update({"path": file["path"]},
                                        {"$set": file},
                                        upsert=True)
+
+    @staticmethod
+    def convert_file_info(file):
+        return {
+                 "path": file['path'],
+                 "hash": file['hash'],
+                 "lastUpdated": file['lastUpdated'].strftime("%Y%m%d %H%M%S"),
+                 "size": file['size'],
+                 "tags": file['tags'],
+               }
+
+    def list_files(self):
+        return list(map(FileRepository.convert_file_info,
+                        self.files.find()))
