@@ -3,7 +3,7 @@ import getopt
 import json
 import sys
 
-from flask import Flask
+from flask import Flask, redirect
 from FindDuplicateFiles.file_repository import FileRepository
 
 mongo_host = "duplicates_store"
@@ -48,7 +48,8 @@ port = 27017
 # port = values["p"] or port
 #
 
-
+# todo: Extract hardcode into properties
+# todo: Keep application code in the volume so that container is not required to be rebuilt
 
 app = Flask(__name__)
 
@@ -58,8 +59,8 @@ def view():
     return json.dumps(fileRepository.list_files())
 
 @app.route('/')
-def hello_geek():
-    return '<h1>Hello from Flask & Docker</h1>'
+def default():
+    return redirect("/view");
 
 
 if __name__ == "__main__":
