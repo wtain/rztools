@@ -18,3 +18,8 @@ CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
 
 # ENTRYPOINT [ "python3" ]
 # CMD [ "app.py", "-h", "duplicates_store" ]
+
+
+# For Ping
+# RUN apt-get update && apt-get install -y iputils-ping
+# to ping host.docker.internal

@@ -19,6 +19,7 @@ class FileRepository:
         return {
                  "path": file['path'],
                  "hash": file['hash'],
+                 "created": file['_id'].generation_time.strftime("%Y%m%d %H%M%S"),
                  "lastUpdated": file['lastUpdated'].strftime("%Y%m%d %H%M%S"),
                  "size": file['size'],
                  "tags": file['tags'],
