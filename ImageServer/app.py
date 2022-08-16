@@ -60,7 +60,11 @@ def view():
 
 @app.route('/')
 def default():
-    return redirect("/view");
+    return redirect("/view")
+
+@app.route('/test')
+def test():
+    return "test aaa"
 
 
 if __name__ == "__main__":
