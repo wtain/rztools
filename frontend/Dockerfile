@@ -14,11 +14,17 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install --silent
-RUN npm install react-scripts@5.0.1 -g --silent
+# Downgrade to 4.0.3 as suggested here:
+# https://github.com/facebook/create-react-app/issues/11879
+# in order to make watch mode work again
+RUN npm install react-scripts@4.0.3 -g --silent
 
 # add app
 COPY . ./
 
 # start app
+ENV WDS_SOCKET_PORT=3000
+# In the end this one helped
+ENV WATCHPACK_POLLING=true
 ENV CHOKIDAR_USEPOLLING "true"
 CMD ["npm", "start"]

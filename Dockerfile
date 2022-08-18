@@ -35,3 +35,7 @@ CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
 # For Ping
 # RUN apt-get update && apt-get install -y iputils-ping
 # to ping host.docker.internal
+
+
+# For Nano
+# apt-get -y install nano
