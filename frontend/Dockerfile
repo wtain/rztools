@@ -18,6 +18,9 @@ RUN npm install --silent
 # https://github.com/facebook/create-react-app/issues/11879
 # in order to make watch mode work again
 RUN npm install react-scripts@4.0.3 -g --silent
+RUN npm install axios
+RUN npm install @types/axios
+# RUN npm i axios-react
 
 # add app
 COPY . ./

@@ -3,7 +3,9 @@ import getopt
 import json
 import sys
 
-from flask import Flask, redirect
+from flask import Flask, redirect, request
+from flask_cors import CORS
+
 from FindDuplicateFiles.file_repository import FileRepository
 
 mongo_host = "duplicates_store"
@@ -52,19 +54,26 @@ port = 27017
 # todo: Keep application code in the volume so that container is not required to be rebuilt
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/view')
 def view():
-    fileRepository = FileRepository(mongoUrl)
     return json.dumps(fileRepository.list_files())
 
 @app.route('/')
 def default():
     return redirect("/view")
 
-@app.route('/test')
-def test():
-    return "test aaa"
+@app.route('/page')
+def get_page():
+    page_num = request.args.get('num', type=int)
+    page_size = request.args.get('size', type=int)
+    return json.dumps(fileRepository.list_files_on_page(page_size, page_num))
+
+@app.route('/page_count')
+def get_page_count():
+    page_size = request.args.get('size', type=int)
+    return json.dumps(fileRepository.count_pages(page_size))
 
 
 if __name__ == "__main__":
@@ -75,3 +84,4 @@ if __name__ == "__main__":
 else:
     mongoUrl = f"mongodb://{mongo_host}:{port}"
     print(f"Mongo DB endpoint: {mongoUrl}")
+    fileRepository = FileRepository(mongoUrl)
