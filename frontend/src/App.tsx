@@ -2,17 +2,17 @@ import axios from 'axios';
 import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import cl from './App.module.css'
-import FileDto from './FileDto';
+import PageSwitcher from './components/PageSwitcher';
+import FileDto from './dto/FileDto';
 
-function range(start, end) {
-  return Array(end - start + 1).fill(0).map((_, idx) => start + idx)
-}
 
 function App() {
   // process.env.
 
-  const page_size = 20;
+  const backend_url = "http://localhost:5000/";
+  const image_provider_url = "http://localhost:8000/";
+
+  const page_size = 200;
 
   const [data, setData] = React.useState<FileDto[]>([]);
 
@@ -22,7 +22,7 @@ function App() {
   React.useEffect(() => {
 
     const fetchData = async () => {
-      const cnt = await axios.get<number>("http://localhost:5000/page_count?size=" + page_size)
+      const cnt = await axios.get<number>(backend_url + "page_count?size=" + page_size)
         .then((response) => response.data);
         setPageCount(cnt);
     }
@@ -33,7 +33,7 @@ function App() {
   React.useEffect(() => {
 
     const fetchData = async () => {
-      const results = await axios.get<FileDto[]>("http://localhost:5000/page?num=" + page_num + "&size=" + page_size)
+      const results = await axios.get<FileDto[]>(backend_url + "page?num=" + page_num + "&size=" + page_size)
         .then((response) => response.data);
       setData(results);
     }
@@ -41,21 +41,14 @@ function App() {
     fetchData();
   }, [page_num, page_count]);
 
-
   return (
     <div>
-      {
-        range(1, page_count).map(page_num_it => 
-          <button
-            key={page_num_it}
-            className={page_num === page_num_it ? cl.page_button_selected : cl.default }
-            onClick={() => setPageNum(page_num_it)}>{page_num_it}</button>
-          )
-      }
+      <PageSwitcher page_num={page_num} page_count={page_count}
+        onCurrentPageChanged={(new_page: number) => setPageNum(new_page)} />
       <br />
       {
         data.map(result => 
-          <img src={"http://localhost:8000/get_image?path=" + result.path} key={result.path} />
+          <img src={image_provider_url + "get_image?path=" + result.path} key={result.path} />
         )
       }
     </div>
