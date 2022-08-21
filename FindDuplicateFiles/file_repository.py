@@ -31,9 +31,50 @@ class FileRepository:
     def list_files_on_page(self, page_size: int, page_number: int):
         return self.output(self.apply_pagination(self.files.find(), page_number, page_size))
 
+    def list_files_by_hash(self, hash: str):
+        return self.output(self.files.find({"hash": hash}))
+
+    def list_hashes(self):
+        return self.materialize(self.files.aggregate(
+            [
+                {
+                    "$group": {
+                        "_id": "$hash",
+                        "count": {"$sum": 1}
+                    }
+                }
+            ]
+        ))
+
+    def list_duplicates(self):
+        return self.materialize(self.files.aggregate(
+            [
+                {
+                    "$group": {
+                        "_id": "$hash",
+                        "count": {"$sum": 1}
+                    }
+                },
+                {
+                    "$match": {
+                        "count": {"$gt": 1}
+                    }
+                },
+                {
+                    "$sort": {
+                        "count": -1
+                    }
+                }
+            ]
+        ))
+
     @staticmethod
     def output(iterator):
-        return list(map(FileRepository.convert_file_info, iterator))
+        return FileRepository.materialize(map(FileRepository.convert_file_info, iterator))
+
+    @staticmethod
+    def materialize(iterator):
+        return list(iterator)
 
     @staticmethod
     def apply_pagination(iterator, page_number: int, page_size: int):
