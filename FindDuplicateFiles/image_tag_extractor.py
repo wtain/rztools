@@ -20,8 +20,14 @@ class ImageTagExtractor:
         try:
             image = Image.open(fileName)
             exifdata = image.getexif()
-            result = {"Image_Size": image.size, "Image_Height": image.height, "Image_Width": image.width,
-                      "Image_Format": image.format, "Image_Mode": image.mode}
+            result = {
+                "Image_Size": image.size,
+                "Image_Height": image.height,
+                "Image_Width": image.width,
+                "Image_Format": image.format,
+                "Image_Mode": image.mode,
+                "create_time": os.path.getctime(fileName)
+            }
             for tag_id in exifdata:
                 tag = TAGS.get(tag_id, tag_id)
                 data = exifdata.get(tag_id)

@@ -57,3 +57,18 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ```bash
 npx create-react-app frontend --template typescript
 ```
+
+
+## Useful commands
+
+### Install jsontool (to prettify json, instead of ``jq``)
+
+```bash
+npm install -g jsontool
+```
+
+### Call endpoints
+
+```bash
+curl http://127.0.0.1:5000/duplicates | json
+```
