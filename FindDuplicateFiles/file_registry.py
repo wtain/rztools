@@ -2,17 +2,19 @@ import os
 import datetime
 from typing import Dict
 
+from FindDuplicateFiles.FileEnumerator import FileEnumerator
 from FindDuplicateFiles.file_repository import FileRepository
 from FindDuplicateFiles.image_tag_extractor import ImageTagExtractor
 
 
 class FileRegistry:
 
-    def __init__(self, hashCalculator, fileRepository: FileRepository, imageTagExtractor: ImageTagExtractor):
+    def __init__(self, hashCalculator, fileRepository: FileRepository, imageTagExtractor: ImageTagExtractor, file_enumerator: FileEnumerator):
         self.registry = {}
         self.hashCalculator = hashCalculator
         self.fileRepository = fileRepository
         self.imageTagExtractor = imageTagExtractor
+        self.file_enumerator = file_enumerator
 
     def visitFile(self, fullFileName: str):
         fileHash = self.hashCalculator.calculateHash(fullFileName)
@@ -24,7 +26,7 @@ class FileRegistry:
         ts = datetime.datetime.utcnow()
         self.fileRepository.store_file(
             self.build_file_entry(fileHash, fullFileName,
-                                  os.path.getsize(fullFileName),
+                                  self.file_enumerator.get_size(fullFileName),
                                   ts, self.imageTagExtractor.extractTags(fullFileName)))
 
     def printStatistics(self):

@@ -22,7 +22,15 @@ def get_image():
         data = binary_file.read()
         response = make_response(data)
         response.headers.set('Content-Type', 'image/jpeg')
+        # todo: stream file
         return response
+
+@app.route('/get_file_size')
+def get_file_size():
+    file_name = request.args.get('path', type=str)
+    return json.dumps({
+        "size": os.path.getsize(file_name)
+    })
 
 @app.route('/get_dir')
 def get_dir():

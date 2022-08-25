@@ -2,6 +2,7 @@ import configparser
 import os
 import sys
 import threading
+import traceback
 from time import sleep
 
 # https://stackoverflow.com/questions/61613656/python-import-from-parent-directory-for-dockerize-structure
@@ -68,6 +69,7 @@ def worker():
         print_threadsafe("Scheduler tick")
         task = task_repository.take_task()
         # todo: add thread pool
+        # todo: update status via Feedback interface - pass it
         if task:
             print_threadsafe(f"Got task {task}")
             if task["task"] == "scan":
@@ -82,9 +84,11 @@ def worker():
                     # todo: pass host imageProvider url
                     fs_task.run(131072, mongoUrl)
                 except Exception as e:
-                    print_threadsafe(f"Failed: {str(e)}")
+                    trace = traceback.format_exc()
+                    message = f"{str(e)}: {trace}"
+                    print_threadsafe(f"Failed: {message}")
                     task["status"] = "failed"
-                    task["message"] = str(e)
+                    task["message"] = message
                     task_repository.update_task(task)
                     continue
                 print_threadsafe("Done")

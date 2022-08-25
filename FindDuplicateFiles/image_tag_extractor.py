@@ -4,11 +4,14 @@ from typing import Dict
 from PIL import Image
 from PIL.ExifTags import TAGS
 
+from FindDuplicateFiles.FileEnumerator import FileEnumerator
+
 
 class ImageTagExtractor:
 
-    def __init__(self):
-        pass
+    def __init__(self, file_enumerator: FileEnumerator):
+        self.file_enumerator = file_enumerator
+        # todo: add Feedback interface
 
     def is_applicable(self, fileName) -> bool:
         _, extension = os.path.splitext(fileName)
@@ -18,7 +21,9 @@ class ImageTagExtractor:
         if not self.is_applicable(fileName):
             return {}
         try:
-            image = Image.open(fileName)
+            file = self.file_enumerator.open_binary(fileName)
+            # image = Image.open(fileName)
+            image = Image.open(file)
             exifdata = image.getexif()
             result = {
                 "Image_Size": image.size,

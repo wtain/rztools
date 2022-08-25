@@ -15,3 +15,9 @@ class FileSystemFileEnumerator(FileEnumerator):
             fullFileNames = list(os.path.join(root, file) for file in files)
             result_files += fullFileNames
         return result_files
+
+    def open_binary(self, file_name: str):
+        return open(file_name, 'rb')
+
+    def get_size(self, file_name: str) -> int:
+        return os.path.getsize(file_name)

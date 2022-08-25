@@ -13,10 +13,10 @@ class ScanFsTask:
         self.file_enumerator = file_enumerator
 
     def run(self, block_size: int, mongoUrl: str):
-        hashCalculator = HashCalculator(block_size)
+        hashCalculator = HashCalculator(block_size, self.file_enumerator)
         fileRepository = FileRepository(mongoUrl)
-        imageTagExtractor = ImageTagExtractor()
-        fileRegistry = FileRegistry(hashCalculator, fileRepository, imageTagExtractor)
+        imageTagExtractor = ImageTagExtractor(self.file_enumerator)
+        fileRegistry = FileRegistry(hashCalculator, fileRepository, imageTagExtractor, self.file_enumerator)
         fileSystemScanner = FileSystemScanner(self.feedback, self.file_enumerator)
 
         fileSystemScanner.scan(fileRegistry.visitFile)

@@ -13,6 +13,7 @@ class TaskRepository:
         print("2")
         self.duplicates_store = self.client.duplicates_store
         print("3")
+        # todo: move to self.client.tasks
         self.tasks = self.duplicates_store.tasks
         print("4")
 
