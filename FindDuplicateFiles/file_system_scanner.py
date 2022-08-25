@@ -2,23 +2,24 @@ import os
 from typing import Callable
 
 from Common.tracktime import TrackTime
+from FindDuplicateFiles import Feedback
+from FindDuplicateFiles.FileEnumerator import FileEnumerator
 
 
 class FileSystemScanner:
 
-    def __init__(self, dir: str):
-        self.dir = dir
+    def __init__(self, feedback: Feedback, file_enumerator: FileEnumerator):
+        self.feedback = feedback
+        self.file_enumerator = file_enumerator;
 
     @TrackTime
     def scan(self, fileVisitor: Callable[[str], None]):
         count = 0
         divisor = 1000
-        for root, dirs, files in os.walk(self.dir):
-            for file in files:
-                count += 1
-                fullFileName = os.path.join(root, file)
-                fileVisitor(fullFileName)
-                if count % divisor == 0:
-                    print(F"*** {count} files processed so far...")
+        for fullFileName in self.file_enumerator.get_files():
+            count += 1
+            fileVisitor(fullFileName)
+            if count % divisor == 0:
+                self.feedback.print(count)
 
-        print(f"Processed {count} files")
+        self.feedback.print(f"Processed {count} files")

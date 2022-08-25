@@ -1,20 +1,17 @@
-from FindDuplicateFiles.file_repository import FileRepository
-from FindDuplicateFiles.file_system_scanner import FileSystemScanner
-from FindDuplicateFiles.hash_calculator import HashCalculator
-from FindDuplicateFiles.image_tag_extractor import ImageTagExtractor
+from FindDuplicateFiles.ConsoleFeedback import ConsoleFeedback
+from FindDuplicateFiles.FileSystemFileEnumerator import FileSystemFileEnumerator
 from FindDuplicateFiles.run_settings import RunSettings
-from FindDuplicateFiles.file_registry import FileRegistry
+from FindDuplicateFiles.scan_fs_task import ScanFsTask
 
-BLOCK_SIZE = 65536
+BLOCK_SIZE = 131072
 
 mongoUrl = "mongodb://localhost:27017"
 
 settings = RunSettings()
-hashCalculator = HashCalculator(settings.blockSize or BLOCK_SIZE)
-fileRepository = FileRepository(mongoUrl)
-imageTagExtractor = ImageTagExtractor()
-fileRegistry = FileRegistry(hashCalculator, fileRepository, imageTagExtractor)
-fileSystemScanner = FileSystemScanner(settings.dir)
 
-fileSystemScanner.scan(fileRegistry.visitFile)
-fileRegistry.printStatistics()
+
+if __name__ == "__main__":
+    feedback = ConsoleFeedback()
+    file_enumerator = FileSystemFileEnumerator(settings.dir)
+    task = ScanFsTask(feedback, file_enumerator)
+    task.run(settings.blockSize or BLOCK_SIZE, mongoUrl)

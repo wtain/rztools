@@ -8,5 +8,10 @@ COPY requirements.txt .
 
 RUN pip3 install -r requirements.txt
 
-CMD [ "python3", "scheduler.py"]
+WORKDIR /python-docker/Scheduler
+
+# Debug container
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+ENTRYPOINT [ "python3", "scheduler.py"]
 

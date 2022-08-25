@@ -1,15 +1,15 @@
 import json
-from time import sleep
+# from time import sleep
 
 from flask import Flask, redirect, request
 from flask_cors import CORS
 
 from FindDuplicateFiles.file_repository import FileRepository
-import threading
-import atexit
-
-import configparser
-
+# import threading
+# import atexit
+#
+# import configparser
+from Scheduler.task_repository import TaskRepository
 
 mongo_host = "duplicates_store"
 port = 27017
@@ -52,6 +52,23 @@ def get_page_count():
     page_size = request.args.get('size', type=int)
     return json.dumps(fileRepository.count_pages(page_size))
 
+@app.route('/status')
+def status():
+    return mongoUrl
+
+# todo: PUT
+# todo: parameters
+@app.route('/add_task')
+def add_task():
+    task = request.args.get('task', type=str)
+    id = task_repository.create_task(task, [])
+    return str(id)
+
+
+@app.route('/tasks')
+def list_tasks():
+    tasks = task_repository.list_tasks()
+    return json.dumps(tasks)
 
 # config = configparser.RawConfigParser()
 # config.read('app.properties')
@@ -115,8 +132,11 @@ if __name__ == "__main__":
     mongoUrl = f"mongodb://localhost:27017"
     print(f"Mongo DB endpoint: {mongoUrl}")
     print("Running")
+    fileRepository = FileRepository(mongoUrl)
+    task_repository = TaskRepository(mongoUrl)
     app.run(debug=True)
 else:
     mongoUrl = f"mongodb://{mongo_host}:{port}"
     print(f"Mongo DB endpoint: {mongoUrl}")
     fileRepository = FileRepository(mongoUrl)
+    task_repository = TaskRepository(mongoUrl)
