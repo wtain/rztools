@@ -1,0 +1,31 @@
+
+.navbar {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    background: darkgray;
+    position: sticky;
+    left: 0px;
+    top: 0px;
+    width: 100%-30px;
+    border-bottom: 2px solid black;
+}
+
+.navbar__links {
+    margin-left: auto;
+}
+
+.link, .link:visited {
+    background-color: darkgray;
+    text-decoration: unset;
+    padding: 5px;
+    margin: 5px;
+    border-style: outset;
+}
+
+.link:hover {
+    background-color: lightslategray;
+    border-style: inset;
+    color: white;
+}

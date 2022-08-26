@@ -10,7 +10,7 @@ class FileSystemScanner:
 
     def __init__(self, feedback: Feedback, file_enumerator: FileEnumerator):
         self.feedback = feedback
-        self.file_enumerator = file_enumerator;
+        self.file_enumerator = file_enumerator
 
     @TrackTime
     def scan(self, fileVisitor: Callable[[str], None]):
@@ -19,6 +19,7 @@ class FileSystemScanner:
         for fullFileName in self.file_enumerator.get_files():
             count += 1
             fileVisitor(fullFileName)
+            self.feedback.report_progress(count)
             if count % divisor == 0:
                 self.feedback.print(count)
 

@@ -1,7 +1,10 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
-import ImagePageView from './components/ImagePageView';
-import RemoteImageRepository from './components/RemoteImageRepository';
+import AppRouter from './components/AppRouter/AppRouter';
+import NavBar from './components/NavBar/NavBar';
+import RemoteImageRepository from './repository/RemoteImageRepository';
+import RemoteTasksRepository from './repository/RemoteTasksRepository';
 
 
 function App() {
@@ -14,11 +17,13 @@ function App() {
 
   const imageRepository = new RemoteImageRepository(backend_url, page_size);
 
+  const tasksRepository = new RemoteTasksRepository(backend_url);
+
   return (
-    <ImagePageView onHashClicked={(hash: string) => {
-        setHash(hash);
-      }}
-      imageRepository={imageRepository}  />
+    <BrowserRouter>
+      <NavBar />
+      <AppRouter imageRepository={imageRepository} tasksRepository={tasksRepository} />
+    </BrowserRouter>
   );
 }
 

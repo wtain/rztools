@@ -77,7 +77,8 @@ def worker():
                 print_threadsafe(f"Got task {task_name}")
                 try:
                     feedback = TaskFeedback(task_repository, task)
-                    file_enumerator = RemoteFileEnumerator(files_host, files_port, "j:\\My Drive\\Pictures")
+                    # todo: host to parameters + register hosts in the storage
+                    file_enumerator = RemoteFileEnumerator(files_host, files_port, "j:\\My Drive\\Pictures", 30)
                     fs_task = ScanFsTask(feedback, file_enumerator)
                     # todo: pass parameters
                     # fs_task.run(task["dir"], task["block_size"], mongoUrl)

@@ -20,6 +20,8 @@ RUN npm install --silent
 RUN npm install react-scripts@4.0.3 -g --silent
 RUN npm install axios
 RUN npm install @types/axios
+RUN npm install react-router-dom
+RUN npm install @types/react-router-dom
 # RUN npm i axios-react
 
 # add app

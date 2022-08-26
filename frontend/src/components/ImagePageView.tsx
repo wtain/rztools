@@ -1,7 +1,7 @@
 import React from 'react';
 import FileDto from '../dto/FileDto';
 import ImageCard from './ImageCard';
-import ImageRepository from './ImageRepository';
+import ImageRepository from '../repository/ImageRepository';
 import PageSwitcher from './PageSwitcher';
 
 
