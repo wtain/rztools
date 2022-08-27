@@ -44,7 +44,7 @@ printLock = threading.Lock()
 
 def print_threadsafe(message):
     with printLock:
-        print(message)
+        print(message, flush=True)
 
 
 class TaskFeedback(Feedback):

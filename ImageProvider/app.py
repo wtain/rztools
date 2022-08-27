@@ -5,6 +5,7 @@ from functools import reduce
 
 from flask import Flask, request, make_response
 from flask_cors import CORS
+from flask import stream_with_context, request
 
 # config = ConfigParser.RawConfigParser()
 # config.read('app.properties')
@@ -15,15 +16,28 @@ from FindDuplicateFiles.FileSystemFileEnumerator import FileSystemFileEnumerator
 app = Flask(__name__)
 CORS(app)
 
+chunk_size = 10 * 1024  # 10Kb
+
 @app.route('/get_image')
 def get_image():
     path = request.args.get('path', type=str)
-    with open(path, "rb") as binary_file:
-        data = binary_file.read()
-        response = make_response(data)
-        response.headers.set('Content-Type', 'image/jpeg')
-        # todo: stream file
-        return response
+    #with open(path, "rb") as binary_file:
+    # binary_file = open(path, "rb")
+
+    @stream_with_context
+    def generate():
+        with open(path, "rb") as binary_file:
+            for data in iter(lambda: binary_file.read(chunk_size), []):
+                yield data
+                if not len(data):
+                    break
+        # response = make_response(data)
+        # response.headers.set('Content-Type', 'image/jpeg')
+        # return response
+
+    response = app.response_class(generate())
+    response.headers.set('Content-Type', 'image/jpeg')  # todo: set proper content type
+    return response
 
 @app.route('/get_file_size')
 def get_file_size():

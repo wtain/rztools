@@ -28,6 +28,7 @@ const AppRouter = (props: Props) => {
                                                                         }}
           imageRepository={props.imageRepository} />} />
           <Route path="/tasks" element={<TasksPage tasksRepository={props.tasksRepository} />} />
+          <Route path="/" element={<Navigate to="/images" />} />
         </Routes>
     )
 }
