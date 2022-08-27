@@ -11,7 +11,7 @@ interface Props {
 
 function PageSwitcher(props: Props) {
     return (
-        <div>
+        <div className={cl.page_switcher}>
             {
                 RangeHelpers.range(1, props.page_count)
                     .map(page_num_it => 

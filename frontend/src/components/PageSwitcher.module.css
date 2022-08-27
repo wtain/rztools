@@ -2,3 +2,8 @@
 .page_button_selected {
     background-color: darkgray;
 }
+
+.page_switcher {
+    position: sticky;
+    top: 54px;
+}
