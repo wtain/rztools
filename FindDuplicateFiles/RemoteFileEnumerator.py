@@ -21,7 +21,7 @@ class RemoteFileEnumerator(FileEnumerator):
 
     def open_binary(self, file_name: str):
         api_url = f"{self.hostname}:{self.port}/get_image?path={file_name}"
-        stream = requests.get(api_url, stream=True).raw
+        stream = requests.get(api_url, stream=True, timeout=self.timeout).raw
         return stream
         # data = requests.get(api_url)
         # file = StringIO(data)
@@ -30,4 +30,4 @@ class RemoteFileEnumerator(FileEnumerator):
     def get_size(self, file_name: str) -> int:
         api_url = f"{self.hostname}:{self.port}/get_file_size?path={file_name}"
         # .content() - raw
-        return int(requests.get(api_url).json()["size"])
+        return int(requests.get(api_url, timeout=self.timeout).json()["size"])

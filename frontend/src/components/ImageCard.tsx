@@ -34,20 +34,22 @@ function ImageCard(props: Props) {
             </td>
           </tr>
           <tr>
-            <div>
-              <table>
-                <tbody>
-                {
-                    props.file.tags.map(tag =>
-                      <tr key={tag.name}>
-                        <td>{tag.name}</td>
-                        <td>{tag.value}</td>
-                      </tr>
-                    )
-                }
-                </tbody>
-              </table>
-            </div>
+            <td>
+              <div>
+                <table>
+                  <tbody>
+                  {
+                      props.file.tags.map(tag =>
+                        <tr key={tag.name}>
+                          <td>{tag.name}</td>
+                          <td>{tag.value}</td>
+                        </tr>
+                      )
+                  }
+                  </tbody>
+                </table>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>

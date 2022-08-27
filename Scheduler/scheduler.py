@@ -41,9 +41,11 @@ mongoUrl = f"mongodb://{mongo_host}:{port}"
 
 printLock = threading.Lock()
 
+
 def print_threadsafe(message):
     with printLock:
         print(message)
+
 
 class TaskFeedback(Feedback):
 
@@ -60,7 +62,42 @@ class TaskFeedback(Feedback):
         self.task_repository.update_task(self.task)
 
 
-def worker():
+def worker(mongoUrl: str, task):
+    # Mongo Client is not thread-safe
+    # https://pymongo.readthedocs.io/en/stable/faq.html#:~:text=PyMongo%20is%20thread%2Dsafe%20and,connection%20pooling%20for%20threaded%20applications.
+    task_repository = TaskRepository(mongoUrl)
+    print_threadsafe(f"Got task {task}")
+    if task["task"] == "scan":
+        task_name = task["task"]
+        print_threadsafe(f"Got task {task_name}")
+        try:
+            feedback = TaskFeedback(task_repository, task)
+            # todo: host to parameters + register hosts in the storage
+            file_enumerator = RemoteFileEnumerator(files_host, files_port, "j:\\My Drive\\Pictures", 30)
+            fs_task = ScanFsTask(feedback, file_enumerator)
+            # todo: pass parameters
+            # fs_task.run(task["dir"], task["block_size"], mongoUrl)
+            # todo: pass host imageProvider url
+            fs_task.run(131072, mongoUrl)
+        except Exception as e:
+            trace = traceback.format_exc()
+            message = f"{str(e)}: {trace}"
+            print_threadsafe(f"Failed: {message}")
+            task["status"] = "failed"
+            task["message"] = message
+            task_repository.update_task(task)
+            return
+        print_threadsafe("Done")
+        task["status"] = "done"
+        task_repository.update_task(task)
+    else:
+        task["status"] = "failed"
+        task["message"] = "Unsupported"
+        task_repository.update_task(task)
+        print_threadsafe("Unknown task")
+
+
+def main_thread():
     print_threadsafe("Worker thread started")
     print_threadsafe(f"Mongo DB endpoint: {mongoUrl}")
     task_repository = TaskRepository(mongoUrl)
@@ -71,35 +108,8 @@ def worker():
         # todo: add thread pool
         # todo: update status via Feedback interface - pass it
         if task:
-            print_threadsafe(f"Got task {task}")
-            if task["task"] == "scan":
-                task_name = task["task"]
-                print_threadsafe(f"Got task {task_name}")
-                try:
-                    feedback = TaskFeedback(task_repository, task)
-                    # todo: host to parameters + register hosts in the storage
-                    file_enumerator = RemoteFileEnumerator(files_host, files_port, "j:\\My Drive\\Pictures", 30)
-                    fs_task = ScanFsTask(feedback, file_enumerator)
-                    # todo: pass parameters
-                    # fs_task.run(task["dir"], task["block_size"], mongoUrl)
-                    # todo: pass host imageProvider url
-                    fs_task.run(131072, mongoUrl)
-                except Exception as e:
-                    trace = traceback.format_exc()
-                    message = f"{str(e)}: {trace}"
-                    print_threadsafe(f"Failed: {message}")
-                    task["status"] = "failed"
-                    task["message"] = message
-                    task_repository.update_task(task)
-                    continue
-                print_threadsafe("Done")
-                task["status"] = "done"
-                task_repository.update_task(task)
-            else:
-                task["status"] = "failed"
-                task["message"] = "Unsupported"
-                task_repository.update_task(task)
-                print_threadsafe("Unknown task")
+            thread = threading.Thread(target=worker, args=(mongoUrl, task,))
+            thread.start()
         else:
             print_threadsafe("No new tasks")
 
@@ -110,4 +120,4 @@ def worker():
 # worker_thread = threading.Thread(target=worker, daemon=True)
 # worker_thread.start()
 
-worker()
+main_thread()

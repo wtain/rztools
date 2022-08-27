@@ -9,6 +9,9 @@ interface Props {
 function TasksPage(props: Props) {
 
   const [data, setData] = React.useState<TaskDto[]>([]);
+  const [tick, setTick] = React.useState<number>(0);
+
+  const refresh_delay = 3000;
 
   React.useEffect(() => {
 
@@ -18,7 +21,10 @@ function TasksPage(props: Props) {
     }
 
     fetchData();
-  }, [props.tasksRepository]);
+
+    setTimeout(() => setTick(tick + 1), refresh_delay);
+  }, [props.tasksRepository, tick]);
+
 
   // todo: background update
   // todo: addition
@@ -41,7 +47,7 @@ function TasksPage(props: Props) {
         <tbody>
           {
             data.map(result => 
-              <tr>
+              <tr key={result.taskid}>
                 <td>{ result.taskid }</td>
                 <td>{result.task}</td>
                 <td>{result.parameters}</td>
@@ -55,6 +61,11 @@ function TasksPage(props: Props) {
           }
         </tbody>
       </table>
+      <button onClick={() => {
+          props.tasksRepository.addTask("scan");
+      }}>
+        Start
+      </button>
     </div>
   )
 }
