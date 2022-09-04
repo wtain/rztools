@@ -12,7 +12,9 @@ function HashPage(props: Props) {
 
   // todo: unify with ImagesPage
 
-  const image_provider_url = process.env.image_provider_url ?? "http://localhost:8000/";
+  // location.host ?
+
+  const image_provider_url = process.env.REACT_APP_IMAGE_PROVIDER_URL ?? "http://localhost:8000/";
 
   const { hash } = useParams();
 

@@ -27,8 +27,9 @@ services:
 #      - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-      - backend_url="http://localhost:5000/"
-      - image_provider_url="http://localhost:8000/"
+      # todo: Check DNS name resolution in local area network
+      - backend_url="http://192.168.1.38:5000/"
+      - image_provider_url="http://192.168.1.38:8000/"
 networks:
   image_network:
     name: image_network
