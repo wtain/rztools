@@ -12,6 +12,7 @@ function TasksPage(props: Props) {
   const [tick, setTick] = React.useState<number>(0);
 
   const refresh_delay = 3000;
+  const refresh_delay_after_change = 300;
 
   React.useEffect(() => {
 
@@ -24,10 +25,6 @@ function TasksPage(props: Props) {
 
     setTimeout(() => setTick(tick + 1), refresh_delay);
   }, [props.tasksRepository, tick]);
-
-
-  // todo: background update
-  // todo: addition
 
   return (
     <div>
@@ -48,23 +45,32 @@ function TasksPage(props: Props) {
           {
             data.map(result => 
               <tr key={result.taskid}>
-                <td>{ result.taskid }</td>
+                <td>{result.taskid}</td>
                 <td>{result.task}</td>
                 <td>{result.parameters}</td>
                 <td>{result.progress}</td>
                 <td>{result.status}</td>
                 <td>{result.message}</td>
                 <td>{result.created_at}</td>
-                <td>{ result.updated_at }</td>
+                <td>{result.updated_at}</td>
               </tr>
             )
           }
         </tbody>
       </table>
       <button onClick={() => {
-          props.tasksRepository.addTask("scan");
+        props.tasksRepository.addTask("scan");
+        // Trigger refresh here immediately (or almost immediately)
+        setTimeout(() => setTick(tick + 1), refresh_delay_after_change);
       }}>
         Start
+      </button>
+      <button onClick={() => {
+        // We need a controller here...
+        props.tasksRepository.markAllRunningAsFailed();
+        setTimeout(() => setTick(tick + 1), refresh_delay_after_change);
+      }}>
+        Mark All Runing as failed
       </button>
     </div>
   )

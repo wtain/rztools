@@ -65,6 +65,12 @@ def add_task():
     return str(id)
 
 
+@app.route('/markfailed')
+def markfailed():
+    number_marked = task_repository.markfailed()
+    return str(number_marked)
+
+
 @app.route('/tasks')
 def list_tasks():
     tasks = task_repository.list_tasks()

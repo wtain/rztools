@@ -12,6 +12,8 @@ interface Props {
 
 function ImagePageView(props: Props) {
 
+  // todo: to properties (same in hashpage)
+  // todo: rename to page and move to pages
   const image_provider_url = process.env.image_provider_url ?? "http://localhost:8000/";
 
   const [data, setData] = React.useState<FileDto[]>([]);

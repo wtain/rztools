@@ -43,6 +43,13 @@ class TaskRepository:
         self.update_task(task)
         return task
 
+    def markfailed(self):
+        result = self.tasks.update_many({"status": "running"},
+                               {
+                                   "$set": { "status": "failed" }
+                                })
+        return f"Marked as failed {result.matched_count} tasks"
+
     @staticmethod
     def convert_task(task):
         fields = ["taskid", "status", "task", "created_at", "parameters", "message", "progress", "updated_at"]

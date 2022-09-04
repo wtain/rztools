@@ -20,6 +20,12 @@ class RemoteImageRepository implements ImageRepository {
       .get<FileDto[]>(this.backend_url + "page?num=" + page_num + "&size=" + this.page_size)
       .then((response) => response.data);
   }
+
+  async getFilesByHash(hash: string): Promise<FileDto[]> {
+    return await axios
+      .get<FileDto[]>(this.backend_url + "byhash?hash=" + hash)
+      .then((response) => response.data);
+  }
 }
 
 export default RemoteImageRepository;

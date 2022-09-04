@@ -6,6 +6,7 @@ import ImagePageView from "../ImagePageView";
 import ImageRepository from "../../repository/ImageRepository";
 import TasksPage from "../../pages/TasksPage/TasksPage";
 import TasksRepository from "../../repository/TasksRepository";
+import HashPage from "../../pages/HashPage/HashPage";
 
 interface Props {
   imageRepository: ImageRepository;
@@ -29,6 +30,8 @@ const AppRouter = (props: Props) => {
           imageRepository={props.imageRepository} />} />
           <Route path="/tasks" element={<TasksPage tasksRepository={props.tasksRepository} />} />
           <Route path="/" element={<Navigate to="/images" />} />
+        
+          <Route path="/byhash/:hash" element={<HashPage imageRepository={props.imageRepository} />} />
         </Routes>
     )
 }

@@ -18,6 +18,12 @@ class RemoteTasksRepository implements TasksRepository {
       .get<string>(this.backend_url + "add_task?task=" + name)
       .then((response) => response.data);
   }
+
+  async markAllRunningAsFailed(): Promise<string> {
+    return await axios
+      .get<string>(this.backend_url + "markfailed")
+      .then((response) => response.data);
+  }
 }
 
 export default RemoteTasksRepository;

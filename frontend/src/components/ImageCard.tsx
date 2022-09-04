@@ -29,7 +29,9 @@ function ImageCard(props: Props) {
           <tr>
             <td>
               <div onClick={() => props.onHashClicked()}>
-                {props.file.hash}
+                <a href={"byhash/" + props.file.hash}>
+                  {props.file.hash}
+                </a>
               </div>
             </td>
           </tr>
