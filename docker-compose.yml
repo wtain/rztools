@@ -30,7 +30,9 @@ services:
       # todo: Check DNS name resolution in local area network
       - backend_url="http://192.168.1.38:5000/"
       - image_provider_url="http://192.168.1.38:8000/"
-networks:
-  image_network:
-    name: image_network
-    driver: bridge
+#networks:
+#  image_network:
+#    name: image_network
+#    driver: bridge
+
+# TODO: Wrap host with a container: from client machine we make calls to that wrapper-container, which calls the host via host.docker.internal - that will work everywhere
